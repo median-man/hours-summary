@@ -14,7 +14,7 @@
 
 <body>
   <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <a class="navbar-brand" href="./index.html">My Hours Summary</a>
       <button id="button-login"
         class="btn btn-outline-primary ml-auto my-2 my-sm-0">Login with
@@ -24,7 +24,18 @@
 
   <main>
 
-    <div class="container"></div>
+    <div class="container mt-3">
+      <!-- <button id="button-select-sheet" class="btn btn-secondary">Select Hours Sheet</button> -->
+      <div id="list-group-sheets" style="display: none"
+        class="list-group list-group-flush"></div>
+      <a href="#" id="external-link-hours-sheet" style="display: none"
+        class="btn btn-secondary" target="_blank">View Hours Sheet <i
+          class="fas fa-external-link-alt" aria-hidden="true"></i></a>
+      <div id="totals" style="display: none" class="mt-5">
+        <p>Hours Today: 5</p>
+        <p>Hours This Week: 25</p>
+      </div>
+    </div>
 
   </main>
 </body>

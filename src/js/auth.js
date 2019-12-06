@@ -13,8 +13,11 @@ const initGapiClient = ({ handleSignInStatusChange }) => () => {
     '661549194387-755tit59r7uggmsctfsjkt25vhl2j1ua.apps.googleusercontent.com';
   const GOOGLE_SHEETS_READY_ONLY_SCOPE =
     'https://www.googleapis.com/auth/spreadsheets.readonly';
+  const GOOGLE_DRIVE_METADATA_READ_ONLY_SCOPE =
+    'https://www.googleapis.com/auth/drive.metadata.readonly';
   const DISCOVERY_DOCS = [
     'https://sheets.googleapis.com/$discovery/rest?version=v4',
+    'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
   ];
 
   const onInitSuccess = () => {
@@ -35,7 +38,10 @@ const initGapiClient = ({ handleSignInStatusChange }) => () => {
     .init({
       clientId: GOOGLE_CLIENT_ID,
       GOOGLE_API_KEY: GOOGLE_API_KEY,
-      scope: GOOGLE_SHEETS_READY_ONLY_SCOPE,
+      scope: [
+        GOOGLE_SHEETS_READY_ONLY_SCOPE,
+        GOOGLE_DRIVE_METADATA_READ_ONLY_SCOPE,
+      ].join(' '),
       discoveryDocs: DISCOVERY_DOCS,
     })
     .then(onInitSuccess, onInitError);
