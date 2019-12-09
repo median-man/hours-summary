@@ -1,58 +1,41 @@
-# Boostrap + Webpack + JQuery Boilerplate
+# Hours Summary
 
-> Build landing page with **Boostrap** and **jQuery** is so easy.
+I built this tool to get a bit of practice with the Google Sheets API and try out a boilerplate for Webpack and jQuery for those
+projects that just don't have much going on.
 
-<a target="_blank" href="https://opensource.org/licenses/MIT" title="License: MIT">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg">
-</a>
-<a href="#badge">
-  <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg">
-</a>
-<a target="_blank" href="http://makeapullrequest.com" title="PRs Welcome"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
+I will probably re-do this in React as it grows.
 
-## Why ?
+## What Does It Do?
 
-React is awesome, and I use it everyday.
+This project will link up to a Google Sheet for tracking
+hours worked. After logging in with a Google account,
+the app may be linked to a Google Sheet which meets the
+required format. Then a summary of the total hours worked for
+the week and day are displayed. (Permission to read from Google Drive and Google Sheets is required. All data is stored in local storage. For now.)
 
-However, not each project needs such a complicated library. jQuery and bootstrap are good enough.
+### Google Sheets Format
 
-Hence, this repo is suitable for simple projects.
+The sheet linked to this app must have the following columns (order matters) starting from column A. The first row must be empty or contain headings. The app does not use the first row.
 
-## About DOM manipulation, all you need is...
+**Hours Sheet Schema:**
 
-#### 🤩 jQuery
+| Column Letter | Data                                | Type | Example             |
+| ------------- | ----------------------------------- | ---- | ------------------- |
+| A             | Timestamp (date/time row was added) | Date | `9/7/2019 15:32:26` |
+| B             | Date (day hours were worked)        | Date | `9/7/2019`          |
+| C             | Start Time (start of time block)    | Date | `2:06:00 PM`          |
+| D             | End Time (end of time block)        | Date | `3:11:00 PM`        |
+| E             | Notes (not used yet)                | Text | `Worked on...`      |
 
-#### ❌ No React
+### So Why Not Use Google Sheets for the Totals?
 
-#### ❌ No Vue
+I intend to add some additional functionality and a better UI
+when I have the time. And, because this is app is for trying
+out feature of the Google APIs as well as the boilerplate.
 
-#### ❌ No Angular
+## Built Using Bootstrap + Webpack + JQuery Boilerplate
 
-## About CSS, all you need is...
-
-#### 🤩 Bootstrap + CSS
-
-#### ❌ No CSS Modules
-
-#### ❌ No styled-components
-
-## Features
-
-- **Bootstrap** and **jQuery** installed
-- Hot Module Replacement (**HMR**)
-- Support **ES6** Syntax (**Babel 7**)
-- **ESLint** + **Prettier** = **Neat Coding Style**
-- Webpack production building (**code splitting**, **cache**, **lazy-loading** and [**Terser**](https://github.com/terser-js/terser))
-
-## Download and Install
-
-Let's go!
-
-```
-$ git clone https://github.com/xxhomey19/bootstrap-webpack-jquery-boilerplate.git
-$ cd bootstrap-webpack-jquery-boilerplate
-$ yarn // or npm install
-```
+This project was built using [Bootstrap + Webpack + jQuery Boilerplate](https://github.com/xxhomey19/bootstrap-webpack-jquery-boilerplate).
 
 ## Development
 
