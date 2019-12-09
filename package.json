@@ -1,16 +1,12 @@
 {
-  "name": "bootstrap-webpack-jquery-boilerplate",
+  "name": "hours-summary",
   "license": "MIT",
-  "author": "xxhomey19",
-  "homepage": "https://xxhomey19.github.io/bootstrap-webpack-jquery-boilerplate/",
+  "author": "median-man",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xxhomey19/bootstrap-webpack-jquery-boilerplate/tree/master"
+    "url": "https://github.com/median-man/hours-summary"
   },
-  "bugs": {
-    "url": "https://github.com/xxhomey19/bootstrap-webpack-jquery-boilerplate/issues"
-  },
-  "version": "1.6.4",
+  "version": "1.0.0",
   "scripts": {
     "build": "webpack -p --progress --mode production --config webpack.config.js",
     "predeploy": "npm run build",
