@@ -5,7 +5,7 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalL
 import '../scss/index.scss';
 import * as auth from './auth';
 import * as sheetsApi from './sheets-api';
-import { SheetListGroup } from './SheetListGroup';
+import { SheetListGroup } from './sheet-list-group';
 import { Hours } from './hours';
 
 library.add(faExternalLinkAlt);
