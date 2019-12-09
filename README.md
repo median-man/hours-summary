@@ -23,15 +23,15 @@ The sheet linked to this app must have the following columns (order matters) sta
 | ------------- | ----------------------------------- | ---- | ------------------- |
 | A             | Timestamp (date/time row was added) | Date | `9/7/2019 15:32:26` |
 | B             | Date (day hours were worked)        | Date | `9/7/2019`          |
-| C             | Start Time (start of time block)    | Date | `2:06:00 PM`          |
+| C             | Start Time (start of time block)    | Date | `2:06:00 PM`        |
 | D             | End Time (end of time block)        | Date | `3:11:00 PM`        |
 | E             | Notes (not used yet)                | Text | `Worked on...`      |
 
 ### So Why Not Use Google Sheets for the Totals?
 
 I intend to add some additional functionality and a better UI
-when I have the time. And, because this is app is for trying
-out feature of the Google APIs as well as the boilerplate.
+when I have the time; and, because I made this is app to try out some Google
+API features. (Sheets and Drive APIs)
 
 ## Built Using Bootstrap + Webpack + JQuery Boilerplate
 
@@ -57,12 +57,10 @@ $ npm run build
 
 Deploy to `gh-pages` branch on GitHub.
 
-**[DEMO](https://xxhomey19.github.io/bootstrap-webpack-jquery-boilerplate/)**
-
 ```
 $ npm run deploy
 ```
 
 ## License
 
-MIT © [xxhomey19](https://github.com/xxhomey19)
+MIT © John Desrosiers
