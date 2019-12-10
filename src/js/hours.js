@@ -1,9 +1,9 @@
-const MS_PER_DAY = 1.15741e-8;
-
 const isToday = date => {
+  const today = new Date();
   return (
-    Math.floor(date.getTime() / MS_PER_DAY) ===
-    Math.floor(Date.now() / MS_PER_DAY)
+    today.getFullYear() === date.getFullYear() &&
+    today.getMonth() === date.getMonth() &&
+    today.getDate() === date.getDate()
   );
 };
 
@@ -51,6 +51,7 @@ export class Hours {
     const totalHoursThisWeek = convertMsToHours(totalMsThisWeek);
 
     const thisDay = thisWeek.filter(item => isToday(item.startDateTime));
+    console.log({ thisWeek, thisDay });
     const totalMsToday = thisDay.reduce(
       (ms, item) =>
         ms + item.endDateTime.getTime() - item.startDateTime.getTime(),
