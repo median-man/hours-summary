@@ -42,8 +42,7 @@ function handleLoginClick() {
 
 const handleHoursSheetSelected = sheetId => {
   sheetsApi.setHoursSheetId(sheetId);
-  hours.load();
-  render();
+  hours.load().then(render);
 };
 
 const render = ({ sheets } = {}) => {
