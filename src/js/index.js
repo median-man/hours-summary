@@ -51,9 +51,6 @@ const render = ({ sheets } = {}) => {
   const isHoursSheetSet = sheetsApi.isHoursSheetSet();
   const isHoursLoaded = hours.isLoaded();
 
-  $('#external-link-hours-sheet').attr({
-    href: sheetsApi.getHoursSheet().webViewLink,
-  });
   if (isSignedIn) {
     $loginButton.text('Log Out').toggleClass('');
   } else {
@@ -62,7 +59,11 @@ const render = ({ sheets } = {}) => {
 
   if (isSignedIn && isHoursSheetSet) {
     sheetListGroup.hide().then(() => {
-      $('#external-link-hours-sheet').fadeIn();
+      $('#external-link-hours-sheet')
+        .attr({
+          href: sheetsApi.getHoursSheet().webViewLink,
+        })
+        .fadeIn();
     });
   } else if (!isHoursSheetSet && sheets) {
     sheetListGroup.setSheets(sheets);

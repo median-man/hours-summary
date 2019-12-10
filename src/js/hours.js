@@ -51,7 +51,6 @@ export class Hours {
     const totalHoursThisWeek = convertMsToHours(totalMsThisWeek);
 
     const thisDay = thisWeek.filter(item => isToday(item.startDateTime));
-    console.log({ thisWeek, thisDay });
     const totalMsToday = thisDay.reduce(
       (ms, item) =>
         ms + item.endDateTime.getTime() - item.startDateTime.getTime(),
