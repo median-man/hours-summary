@@ -7,6 +7,7 @@ import * as auth from './auth';
 import * as sheetsApi from './sheets-api';
 import { SheetListGroup } from './sheet-list-group';
 import { Hours } from './hours';
+import HoursSummary from './components/hours-summary';
 
 library.add(faExternalLinkAlt);
 dom.watch();
@@ -75,14 +76,9 @@ const render = ({ sheets } = {}) => {
   }
 
   if (isHoursLoaded) {
-    const { currentDay, currentWeek } = hours.totals();
+    const hoursSummary = new HoursSummary({ hours: hours.totals() });
     $('#totals')
-      .html(
-        `
-      <p>Hours Today: ${currentDay.hours.toFixed(2)}</p>
-      <p>Hours This Week: ${currentWeek.hours.toFixed(2)}</p>
-    `
-      )
+      .html(hoursSummary.render())
       .fadeIn();
   }
 };
