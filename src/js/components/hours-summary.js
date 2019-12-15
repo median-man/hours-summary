@@ -13,10 +13,10 @@ export default class HoursSummary {
     this._hours = hours;
   }
   render() {
-    const { currentWeek, previousWeek } = this._hours;
-
+    const { previousWeek } = this._hours;
     return [
-      `<p class="h5 pt-3">${currentWeek.hours.toFixed(2)} hours this week</p>`,
+      `<p class="h5 pt-3">Current Week:</p>`,
+      this.renderProgressBar(),
       `<p class="pt-3">${previousWeek.hours.toFixed(2)} hours last week</p>`,
       this.renderDaysTable(),
     ].join('');
@@ -34,11 +34,31 @@ export default class HoursSummary {
   renderDaysTableRow(day, isToday) {
     const td = `<td>${this._hours[day].hours.toFixed(2)}</td>`;
     if (isToday) {
-      const badge = `<span class="badge badge-primary">Today</span>`;
+      const badge = '<span class="badge badge-primary">Today!</span>';
       const th = `<th>${day[0].toUpperCase() + day.substr(1)} ${badge}</th>`;
       return `<tr class="table-primary">${th}${td}</tr>`;
     }
     const th = `<th>${day[0].toUpperCase() + day.substr(1)}</th>`;
     return `<tr>${th}${td}</tr>`;
+  }
+
+  renderProgressBar() {
+    const TARGET_HOURS = 40;
+    const { hours } = this._hours.currentDay;
+    // const hours = 30;
+    const percentComplete = Math.floor((hours / TARGET_HOURS) * 100);
+    const label = `${hours} / ${TARGET_HOURS}`;
+    return `
+    <div class="progress" style="max-width: 400px">
+      <div
+        style="width: ${percentComplete}%"
+        class="progress-bar"
+        role="progressbar"
+        aria-valuenow="${percentComplete}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >${label}</div>
+    </div>
+  `;
   }
 }
