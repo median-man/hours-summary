@@ -41,6 +41,7 @@ describe('totals', () => {
     expect(result).toEqual({
       currentWeek: { hours: 0 },
       currentDay: { hours: 0 },
+      previousWeek: { hours: 0 },
       sunday: { hours: 0 },
       monday: { hours: 0 },
       tuesday: { hours: 0 },
@@ -73,6 +74,7 @@ describe('totals', () => {
     expect(result).toEqual({
       currentWeek: { hours: 7.5 },
       currentDay: { hours: 3.5 },
+      previousWeek: { hours: 0 },
       sunday: { hours: 0 },
       monday: { hours: 4 },
       tuesday: { hours: 0 },
@@ -81,5 +83,27 @@ describe('totals', () => {
       friday: { hours: 0 },
       saturday: { hours: 0 },
     });
+  });
+
+  test('calculates hours worked for the previous week', async () => {
+    await setup([
+      {
+        // monday - 4 hours
+        timestamp: new Date('December 9, 2019 12:01:00'),
+        startDateTime: new Date('December 9, 2019 08:00:00'),
+        endDateTime: new Date('December 9, 2019 12:00:00'),
+        notes: 'did stuff',
+      },
+      {
+        // wednesday - 3.5 hours
+        timestamp: new Date('December 11, 2019 12:01:00'),
+        startDateTime: new Date('December 11, 2019 08:30:00'),
+        endDateTime: new Date('December 11, 2019 12:00:00'),
+        notes: 'did other stuff',
+      },
+    ]);
+
+    const { previousWeek } = hours.totals();
+    expect(previousWeek.hours).toBe(7.5);
   });
 });

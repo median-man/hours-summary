@@ -1,4 +1,4 @@
-const dayOfWeek = date => {
+const dayOfWeek = dateIndex => {
   return [
     'sunday',
     'monday',
@@ -7,7 +7,7 @@ const dayOfWeek = date => {
     'thursday',
     'friday',
     'saturday',
-  ][date.getDay()];
+  ][dateIndex.getDay()];
 };
 
 export class Hours {
@@ -34,6 +34,7 @@ export class Hours {
     const result = {
       currentWeek: { hours: 0 },
       currentDay: { hours: 0 },
+      previousWeek: { hours: 0 },
       sunday: { hours: 0 },
       monday: { hours: 0 },
       tuesday: { hours: 0 },
@@ -51,28 +52,43 @@ export class Hours {
       result.currentWeek.hours += hoursWorked;
     });
 
+    result.previousWeek.hours = this.previousWeek().reduce(
+      (hours, { startDateTime, endDateTime }) => {
+        return hours + convertMsToHours(endDateTime - startDateTime);
+      },
+      0
+    );
+
     result.currentDay.hours = result[dayOfWeek(new Date())].hours;
     return result;
   }
 
   thisWeek() {
-    const isThisWeek = date => {
-      const firstDayOfWeek = new Date();
-      firstDayOfWeek.setMilliseconds(0);
-      firstDayOfWeek.setSeconds(0);
-      firstDayOfWeek.setMinutes(0);
-      firstDayOfWeek.setHours(0);
-      firstDayOfWeek.setDate(
-        firstDayOfWeek.getDate() - firstDayOfWeek.getDay()
-      );
+    return this._getHoursForWeek(this._firstDayOfCurrentWeek());
+  }
 
-      const firstDayOfNextWeek = new Date(firstDayOfWeek.getTime());
-      firstDayOfNextWeek.setDate(
-        firstDayOfNextWeek.getDate() + 6 - firstDayOfWeek.getDay()
-      );
+  previousWeek() {
+    const previousWeekBeginDate = this._firstDayOfCurrentWeek();
+    previousWeekBeginDate.setDate(previousWeekBeginDate.getDate() - 7);
+    return this._getHoursForWeek(previousWeekBeginDate);
+  }
 
-      return date >= firstDayOfWeek && date < firstDayOfNextWeek;
-    };
-    return this._hoursData.filter(item => isThisWeek(item.startDateTime));
+  _firstDayOfCurrentWeek() {
+    const result = new Date();
+    result.setMilliseconds(0);
+    result.setSeconds(0);
+    result.setMinutes(0);
+    result.setHours(0);
+    result.setDate(result.getDate() - result.getDay());
+    return result;
+  }
+
+  _getHoursForWeek(beginDate) {
+    const endDate = new Date(beginDate.getTime());
+    endDate.setDate(beginDate.getDate() + 7);
+    return this._hoursData.filter(
+      ({ startDateTime }) =>
+        startDateTime >= beginDate && startDateTime < endDate
+    );
   }
 }
