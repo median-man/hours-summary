@@ -1,3 +1,5 @@
+import HoursProgressBar from './hours-progress-bar';
+
 const weekDays = [
   'sunday',
   'monday',
@@ -13,10 +15,16 @@ export default class HoursSummary {
     this._hours = hours;
   }
   render() {
-    const { previousWeek } = this._hours;
+    const WEEKLY_HOURS_GOAL = 40;
+    const { previousWeek, currentWeek } = this._hours;
+    const currentWeekProgressBar = new HoursProgressBar().render({
+      goal: WEEKLY_HOURS_GOAL,
+      hours: currentWeek.hours,
+    });
+
     return [
       `<p class="h5 pt-3">Current Week:</p>`,
-      this.renderProgressBar(),
+      currentWeekProgressBar,
       `<p class="pt-3">${previousWeek.hours.toFixed(2)} hours last week</p>`,
       this.renderDaysTable(),
     ].join('');
@@ -40,25 +48,5 @@ export default class HoursSummary {
     }
     const th = `<th>${day[0].toUpperCase() + day.substr(1)}</th>`;
     return `<tr>${th}${td}</tr>`;
-  }
-
-  renderProgressBar() {
-    const TARGET_HOURS = 40;
-    const { hours } = this._hours.currentDay;
-    // const hours = 30;
-    const percentComplete = Math.floor((hours / TARGET_HOURS) * 100);
-    const label = `${hours} / ${TARGET_HOURS}`;
-    return `
-    <div class="progress" style="max-width: 400px">
-      <div
-        style="width: ${percentComplete}%"
-        class="progress-bar"
-        role="progressbar"
-        aria-valuenow="${percentComplete}"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      >${label}</div>
-    </div>
-  `;
   }
 }
