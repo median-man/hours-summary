@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer, useEffect } from "react";
 import config from "../../config.json";
 
 const { GOOGLE_API_KEY, GOOGLE_CLIENT_ID } = config;
@@ -12,70 +12,113 @@ const DISCOVERY_DOCS = [
   "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
 ];
 
-class GoogleAuth extends React.Component {
-  state = {
-    isSignedIn: false
-  };
-  auth = null;
+const ERROR = "ERROR";
+const LOGOUT = "LOGOUT";
+const PENDING = "PENDING";
+const SUCCESS = "SUCCESS";
 
-  async componentDidMount() {
-    window.gapi.load("client:auth2", this.initGapiClient);
+const initialState = {
+  error: null,
+  isLoggedIn: false,
+  isPending: false,
+  user: null
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ERROR:
+      return {
+        ...state,
+        error: action.error,
+        isPending: false
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        isLoggedIn: false,
+        isPending: false,
+        user: null
+      };
+    case PENDING:
+      return {
+        ...state,
+        isPending: true
+      };
+    case SUCCESS:
+      return {
+        ...state,
+        isLoggedIn: true,
+        isPending: false,
+        user: action.user
+      };
+    default:
+      throw new Error(`Invalid action type: ${action.type}`);
   }
+};
 
-  initGapiClient = () => {
-    window.gapi.client
-      .init({
-        clientId: GOOGLE_CLIENT_ID,
-        GOOGLE_API_KEY: GOOGLE_API_KEY,
-        scope: [
-          GOOGLE_SHEETS_READY_ONLY_SCOPE,
-          GOOGLE_DRIVE_METADATA_READ_ONLY_SCOPE
-        ].join(" "),
-        discoveryDocs: DISCOVERY_DOCS
-      })
-      .then(() => {
-        this.auth = window.gapi.auth2.getAuthInstance();
-        this.onAuthChange(this.auth.isSignedIn.get());
-        this.auth.isSignedIn.listen(this.onAuthChange);
-      });
-  };
+const GoogleAuth = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  onAuthChange = isSignedIn => {
-    console.log({ isSignedIn });
-    console.log(this.auth.currentUser.get().getId());
-    this.setState({ isSignedIn });
-  };
+  useEffect(() => {
+    const onAuthChange = isSignedIn => {
+      console.log("auth changed", { isSignedIn });
+      if (isSignedIn) {
+        return dispatch({
+          type: SUCCESS,
+          user: window.gapi.auth2.getAuthInstance().currentUser.get()
+        });
+      }
+      return dispatch({ type: LOGOUT });
+    };
 
-  onSignInClick = () => this.auth.signIn();
-
-  onSignOutClick = () => this.auth.signOut();
-
-  renderAuthButton() {
-    if (this.state.isSignedIn === null) {
-      return null;
+    const initGapiClient = () => {
+      dispatch({ type: PENDING });
+      window.gapi.client
+        .init({
+          clientId: GOOGLE_CLIENT_ID,
+          GOOGLE_API_KEY: GOOGLE_API_KEY,
+          scope: [
+            GOOGLE_SHEETS_READY_ONLY_SCOPE,
+            GOOGLE_DRIVE_METADATA_READ_ONLY_SCOPE
+          ].join(" "),
+          discoveryDocs: DISCOVERY_DOCS
+        })
+        .then(() => {
+          const auth = window.gapi.auth2.getAuthInstance();
+          auth.isSignedIn.listen(onAuthChange);
+          onAuthChange(auth.isSignedIn.get());
+        })
+        .catch(error => {
+          dispatch({ type: ERROR, error: error.message });
+        });
+    };
+    window.gapi.load("client:auth2", initGapiClient);
+    return () => {
+      window.gapi.auth2.getAuthInstance()
     }
-    if (this.state.isSignedIn) {
-      return (
-        <button
-          onClick={this.onSignOutClick}
-          className="btn btn-outline-danger ml-auto my-2 my-sm-0"
-        >
-          Sign Out
-        </button>
-      );
-    }
+  }, []);
+
+  if (state.isPending) {
+    return null;
+  }
+  if (state.isLoggedIn) {
     return (
       <button
-        onClick={this.onSignInClick}
-        className="btn btn-outline-primary ml-auto my-2 my-sm-0"
+        onClick={() => window.gapi.auth2.getAuthInstance().signOut()}
+        className="btn btn-outline-danger ml-auto my-2 my-sm-0"
       >
-        Sign In with Google
+        Sign Out
       </button>
     );
   }
-  render() {
-    return <div>{this.renderAuthButton()}</div>;
-  }
-}
+  return (
+    <button
+      onClick={() => window.gapi.auth2.getAuthInstance().signIn()}
+      className="btn btn-outline-primary ml-auto my-2 my-sm-0"
+    >
+      Sign In with Google
+    </button>
+  );
+};
 
 export default GoogleAuth;
