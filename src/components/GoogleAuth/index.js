@@ -1,5 +1,6 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useEffect } from "react";
 import config from "../../config.json";
+import { useAuth, ERROR, PENDING, SUCCESS, LOGOUT } from "../../utils/auth";
 
 const { GOOGLE_API_KEY, GOOGLE_CLIENT_ID } = config;
 
@@ -12,63 +13,19 @@ const DISCOVERY_DOCS = [
   "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
 ];
 
-const ERROR = "ERROR";
-const LOGOUT = "LOGOUT";
-const PENDING = "PENDING";
-const SUCCESS = "SUCCESS";
-
-const initialState = {
-  error: null,
-  isLoggedIn: false,
-  isPending: false,
-  user: null
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ERROR:
-      return {
-        ...state,
-        error: action.error,
-        isPending: false
-      };
-    case LOGOUT:
-      return {
-        ...state,
-        isLoggedIn: false,
-        isPending: false,
-        user: null
-      };
-    case PENDING:
-      return {
-        ...state,
-        isPending: true
-      };
-    case SUCCESS:
-      return {
-        ...state,
-        isLoggedIn: true,
-        isPending: false,
-        user: action.user
-      };
-    default:
-      throw new Error(`Invalid action type: ${action.type}`);
-  }
-};
-
 const GoogleAuth = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useAuth();
 
   useEffect(() => {
     const onAuthChange = isSignedIn => {
-      console.log("auth changed", { isSignedIn });
       if (isSignedIn) {
-        return dispatch({
+        dispatch({
           type: SUCCESS,
           user: window.gapi.auth2.getAuthInstance().currentUser.get()
         });
+      } else {
+        dispatch({ type: LOGOUT });
       }
-      return dispatch({ type: LOGOUT });
     };
 
     const initGapiClient = () => {
@@ -94,9 +51,9 @@ const GoogleAuth = () => {
     };
     window.gapi.load("client:auth2", initGapiClient);
     return () => {
-      window.gapi.auth2.getAuthInstance()
-    }
-  }, []);
+      window.gapi.auth2.getAuthInstance();
+    };
+  }, [dispatch]);
 
   if (state.isPending) {
     return null;
