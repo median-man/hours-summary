@@ -7,12 +7,6 @@ const Navbar = () => {
       <a className="navbar-brand" href="./index.html">
         My Hours Summary
       </a>{" "}
-      {/* <button
-        id="button-login"
-        className="btn btn-outline-primary ml-auto my-2 my-sm-0"
-      >
-        Sign In with Google
-      </button> */}
       <GoogleAuth />
     </nav>
   );
