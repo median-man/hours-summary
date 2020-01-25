@@ -22,7 +22,6 @@ const Dashboard = () => {
   }
 
   if (hoursSheet) {
-    console.log(hoursSheet);
     return (
       <Container>
         <DashboardPresenter />
