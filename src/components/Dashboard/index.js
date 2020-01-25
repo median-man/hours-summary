@@ -31,7 +31,7 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <SheetList onSheetSelect={handleSheetSelect} />;
+      <SheetList onSheetSelect={handleSheetSelect} />
     </Container>
   );
 };
