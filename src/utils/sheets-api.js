@@ -25,12 +25,6 @@ export const fetchAllSheets = () => {
   });
 };
 
-export const setHoursSheet = sheetId =>
-  localStorage.setItem(
-    "hours-sheet",
-    JSON.stringify(sheets.find(sheet => sheet.id === sheetId))
-  );
-
 export const setHoursSheetId = sheetId =>
   localStorage.setItem(
     "hours-sheet",

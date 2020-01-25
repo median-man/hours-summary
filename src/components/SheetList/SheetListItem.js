@@ -2,15 +2,15 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
-const SheetListItem = ({ text, id }) => {
+const SheetListItem = ({ name, id, onClick }) => {
   return (
-    <button className="list-group-item list-group-item-action h6" type="button">
+    <button className="list-group-item list-group-item-action h6" type="button" onClick={onClick}>
       <img
         src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.spreadsheet"
         aria-hidden="true"
         className="mr-2"
       />
-      {text}
+      {name}
       <a
         className="web-view-link pl-2"
         href={`https://docs.google.com/spreadsheets/d/${id}/edit?usp=drivesdk`}

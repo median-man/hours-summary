@@ -1,18 +1,24 @@
-import React from "react";
-import { getHoursSheet } from "../../utils/sheets-api";
+import React, { useState, useEffect } from "react";
+import { getHoursSheet, setHoursSheetId } from "../../utils/sheets-api";
 import { useAuthContext } from "../../utils/auth";
 import SheetList from "../SheetList";
 
 const Dashboard = () => {
   const [auth] = useAuthContext();
+  const [hoursSheet, setHoursSheet] = useState(getHoursSheet());
+
+  const handleSheetSelect = sheetId => {
+    setHoursSheetId(sheetId)
+    setHoursSheet(getHoursSheet())
+  }
+
   if (!auth.isLoggedIn) {
     return <div>Please log in.</div>;
   }
-  const hoursSheet = getHoursSheet()
   if (hoursSheet) {
-      return <div>Dashboard</div>;
+    return <div>Dashboard</div>;
   }
-  return <SheetList />
+  return <SheetList onSheetSelect={handleSheetSelect} />;
 };
 
 export default Dashboard;
