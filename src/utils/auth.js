@@ -44,15 +44,16 @@ const reducer = (state, action) => {
   }
 };
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext([]);
 
 export const AuthProvider = props => {
+  const [state, dispatch] = useReducer(reducer, initialState)
   return (
     <AuthContext.Provider
-      value={useReducer(reducer, initialState)}
+      value={[state, dispatch]}
       {...props}
     />
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);

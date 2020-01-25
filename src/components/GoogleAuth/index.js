@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import config from "../../config.json";
-import { useAuth, ERROR, PENDING, SUCCESS, LOGOUT } from "../../utils/auth";
+import { useAuthContext, ERROR, PENDING, SUCCESS, LOGOUT } from "../../utils/auth";
 
 const { GOOGLE_API_KEY, GOOGLE_CLIENT_ID } = config;
 
@@ -14,7 +14,7 @@ const DISCOVERY_DOCS = [
 ];
 
 const GoogleAuth = () => {
-  const [state, dispatch] = useAuth();
+  const [state, dispatch] = useAuthContext();
 
   useEffect(() => {
     const onAuthChange = isSignedIn => {

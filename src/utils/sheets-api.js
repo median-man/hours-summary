@@ -1,5 +1,3 @@
-const { gapi } = window;
-
 let sheets = [];
 
 const hoursLoadedAt = {
@@ -18,7 +16,7 @@ export const fetchAllSheets = () => {
       resolve(files);
     };
 
-    gapi.client.drive.files
+    window.gapi.client.drive.files
       .list({
         fields: "nextPageToken, files(id, name, webViewLink, iconLink)",
         q: 'mimeType="application/vnd.google-apps.spreadsheet"'
@@ -39,15 +37,19 @@ export const setHoursSheetId = sheetId =>
     JSON.stringify(sheets.find(sheet => sheet.id === sheetId))
   );
 
-export const getHoursSheet = () =>
-  JSON.parse(localStorage.getItem("hours-sheet"));
+export const getHoursSheet = () => {
+  try {
+    const hoursSheetJson = window.localStorage.getItem("hours-sheet");
+    return hoursSheetJson && JSON.parse(hoursSheetJson);
+  } catch (error) {
+    return null;
+  }
+};
 
 export const getHoursSheetId = () => {
   const hoursSheetData = getHoursSheet();
   return hoursSheetData && hoursSheetData.id;
 };
-
-export const isHoursSheetSet = () => !!getHoursSheet();
 
 const convertDateSerialNumberToDate = serialNumber => {
   const SECONDS_PER_DAY = 86400;
@@ -105,7 +107,7 @@ export const fetchHours = () => {
       valueRenderOption: "UNFORMATTED_VALUE",
       dateTimeRenderOption: "SERIAL_NUMBER"
     };
-    gapi.client.sheets.spreadsheets.values.get(params).then(response => {
+    window.gapi.client.sheets.spreadsheets.values.get(params).then(response => {
       // skip header row
       const hours = response.result.values.slice(1).map(buildHoursItemFromRow);
       hoursLoadedAt.set(new Date());
