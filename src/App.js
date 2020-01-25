@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { AuthProvider } from "./utils/auth";
 import * as gapi from "./utils/google-api";
+import * as sheetsApi from "./utils/sheets-api";
+import { Hours } from "./utils/hours";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Spinner from "./components/Spinner";
@@ -22,7 +24,7 @@ function App() {
     return (
       <AuthProvider>
         <Navbar />
-        <Dashboard />
+        <Dashboard hours={new Hours({ sheetsApi })} />
       </AuthProvider>
     );
   }

@@ -3,10 +3,31 @@ import HoursSheetButton from "./HoursSheetButton";
 import CurrentWeekProgress from "./CurrentWeekProgress";
 import WeekDaysTable from "./WeekDaysTable";
 
-const DashboardPresenter = () => {
-  const hoursWorkedThisWeek = 29;
+const daysOfTheWeek = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday"
+];
+
+const DashboardPresenter = ({
+  currentWeek,
+  previousWeek,
+  currentDay,
+  ...days
+}) => {
   const goalHoursWorkedThisWeek = 40;
-  const hoursLastWeek = 53.43;
+  const hoursWorkedThisWeek = currentWeek.hours;
+  const hoursLastWeek = previousWeek.hours;
+  const dayOfWeek = daysOfTheWeek[new Date().getDay()]
+  const tableData = daysOfTheWeek.map(day => ({
+    header: day,
+    data: days[day].hours.toFixed(2),
+    isToday: day === dayOfWeek
+  }));
   return (
     <>
       <HoursSheetButton />
@@ -16,9 +37,9 @@ const DashboardPresenter = () => {
           value={hoursWorkedThisWeek}
           max={goalHoursWorkedThisWeek}
         />
-        <p className="pt-3">{hoursLastWeek} hours last week</p>
+        <p className="pt-3">{hoursLastWeek.toFixed(2)} hours last week</p>
       </div>
-      <WeekDaysTable />
+      <WeekDaysTable tableData={tableData} />
     </>
   );
 };
