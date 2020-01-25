@@ -35,7 +35,7 @@ const Dashboard = ({ hours }) => {
   if (isHoursLoaded) {
     return (
       <Container>
-        <DashboardPresenter {...hours.totals()} />
+        <DashboardPresenter sheetId={hoursSheet.id} {...hours.totals()} />
       </Container>
     );
   }

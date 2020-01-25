@@ -14,6 +14,7 @@ const daysOfTheWeek = [
 ];
 
 const DashboardPresenter = ({
+  sheetId,
   currentWeek,
   previousWeek,
   currentDay,
@@ -30,7 +31,7 @@ const DashboardPresenter = ({
   }));
   return (
     <>
-      <HoursSheetButton />
+      <HoursSheetButton sheetId={sheetId} />
       <div className="mt-5">
         <h2 className="h5 pt-3">Current Week:</h2>
         <CurrentWeekProgress
