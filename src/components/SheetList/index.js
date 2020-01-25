@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SheetListPresenter from "./SheetListPresenter";
+import { fetchAllSheets } from "../../utils/sheets-api";
 
 const SheetList = () => {
-  const googleSheets = [
+  const [googleSheets, setGoogleSheets] = useState([
     {
       text: "Sheet 1",
       id: "sheet-1"
@@ -15,7 +16,13 @@ const SheetList = () => {
       text: "Sheet 3",
       id: "sheet-3"
     }
-  ];
+  ]);
+  useEffect(() => {
+    (async () => {
+      const result = await fetchAllSheets();
+      console.log(result);
+    })();
+  }, []);
   return <SheetListPresenter sheets={googleSheets} />;
 };
 
