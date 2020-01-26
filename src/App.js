@@ -8,6 +8,7 @@ import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Spinner from "./components/Spinner";
 import { HashRouter, Switch, Route } from "react-router-dom";
+import TimeClock from "./components/TimeClock";
 
 function App() {
   const [isGapiClientLoaded, setIsGapiClientLoaded] = useState(false);
@@ -41,7 +42,7 @@ function App() {
         <Navbar isGapiClientLoaded={isGapiClientLoaded} />
         <Switch>
           <Route path="/time-clock">
-            Time Clock
+            <TimeClock />
           </Route>
           <Route path="/">
             {isGapiClientLoaded ? (
