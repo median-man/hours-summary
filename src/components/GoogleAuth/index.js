@@ -8,11 +8,15 @@ import {
 } from "../../utils/auth";
 import { getAuth as gapiAuth } from "../../utils/google-api";
 
-const GoogleAuth = () => {
+const GoogleAuth = ({ isGapiClientLoaded }) => {
   const [state, dispatch] = useAuthContext();
 
   useEffect(() => {
     dispatch({ type: PENDING });
+    if (!isGapiClientLoaded) {
+      // remain in pending state until google api client has loaded in
+      return;
+    }
     const onAuthChange = isSignedIn => {
       if (isSignedIn) {
         dispatch({
@@ -30,10 +34,23 @@ const GoogleAuth = () => {
     } catch (error) {
       dispatch({ type: ERROR, error: error.message });
     }
-  }, [dispatch]);
+  }, [dispatch, isGapiClientLoaded]);
 
   if (state.isPending) {
-    return null;
+    return (
+      <button
+        onClick={() => gapiAuth().signIn()}
+        className="btn btn-outline-primary ml-auto my-2 my-sm-0"
+        disabled
+      >
+        <span
+          className="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        />{" "}
+        Loading...
+      </button>
+    );
   }
   if (state.isLoggedIn) {
     return (

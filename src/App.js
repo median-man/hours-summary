@@ -17,18 +17,9 @@ function App() {
       .then(() => setIsGapiClientLoaded(true))
       .catch(error => {
         setIsGapiClientLoaded(false);
-        setGapiError(error)
+        setGapiError(error);
       });
   }, []);
-
-  if (isGapiClientLoaded) {
-    return (
-      <AuthProvider>
-        <Navbar />
-        <Dashboard hours={new Hours({ sheetsApi })} />
-      </AuthProvider>
-    );
-  }
 
   if (gapiError) {
     return (
@@ -43,7 +34,16 @@ function App() {
       </div>
     );
   }
-  return <Spinner />;
+  return (
+    <AuthProvider>
+      <Navbar isGapiClientLoaded={isGapiClientLoaded} />
+      {isGapiClientLoaded ? (
+        <Dashboard hours={new Hours({ sheetsApi })} />
+      ) : (
+        <Spinner />
+      )}
+    </AuthProvider>
+  );
 }
 
 export default App;
