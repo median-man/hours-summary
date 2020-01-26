@@ -4,22 +4,19 @@ import { useAuthContext } from "../../utils/auth";
 import SheetList from "../SheetList";
 import DashboardPresenter from "./DashboardPresenter";
 import Spinner from "../Spinner";
-
-const Container = ({ children }) => (
-  <div className="container mt-3">{children}</div>
-);
+import Container from "../Container";
 
 const Dashboard = ({ hours }) => {
   const [auth] = useAuthContext();
   const [hoursSheet, setHoursSheet] = useState(getHoursSheet());
-  const [isHoursLoaded, setIsHoursLoaded] = useState(false)
+  const [isHoursLoaded, setIsHoursLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (hoursSheet) {
         await hours.load();
       }
-      setIsHoursLoaded(hours.isLoaded())
+      setIsHoursLoaded(hours.isLoaded());
     })();
   }, [hoursSheet, hours]);
 
@@ -41,7 +38,7 @@ const Dashboard = ({ hours }) => {
   }
 
   if (hoursSheet) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
