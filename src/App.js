@@ -7,6 +7,7 @@ import { Hours } from "./utils/hours";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Spinner from "./components/Spinner";
+import { HashRouter, Switch, Route } from "react-router-dom";
 
 function App() {
   const [isGapiClientLoaded, setIsGapiClientLoaded] = useState(false);
@@ -36,12 +37,21 @@ function App() {
   }
   return (
     <AuthProvider>
-      <Navbar isGapiClientLoaded={isGapiClientLoaded} />
-      {isGapiClientLoaded ? (
-        <Dashboard hours={new Hours({ sheetsApi })} />
-      ) : (
-        <Spinner />
-      )}
+      <HashRouter>
+        <Navbar isGapiClientLoaded={isGapiClientLoaded} />
+        <Switch>
+          <Route path="/time-clock">
+            Time Clock
+          </Route>
+          <Route path="/">
+            {isGapiClientLoaded ? (
+              <Dashboard hours={new Hours({ sheetsApi })} />
+            ) : (
+              <Spinner />
+            )}
+          </Route>
+        </Switch>
+      </HashRouter>
     </AuthProvider>
   );
 }
