@@ -2,6 +2,7 @@ import React from "react";
 import HoursSheetButton from "./HoursSheetButton";
 import CurrentWeekProgress from "./CurrentWeekProgress";
 import WeekDaysTable from "./WeekDaysTable";
+import { Link } from "react-router-dom";
 
 const daysOfTheWeek = [
   "sunday",
@@ -31,6 +32,7 @@ const DashboardPresenter = ({
   }));
   return (
     <>
+      <Link to="/time-clock" className="btn btn-dark mr-1">Time Clock</Link>
       <HoursSheetButton sheetId={sheetId} />
       <div className="mt-5">
         <h2 className="h5 pt-3">Current Week:</h2>

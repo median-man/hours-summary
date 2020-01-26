@@ -5,7 +5,7 @@ const HoursSheetButton = ({ sheetId }) => (
   <a
     href={`https://docs.google.com/spreadsheets/d/${sheetId}/edit?usp=drivesdk`}
     id="external-link-hours-sheet"
-    className="btn btn-secondary"
+    className="btn btn-outline-dark"
     target="_blank"
     rel="noopener noreferrer"
   >
