@@ -60,7 +60,7 @@ const TimeClock = () => {
   return (
     <Container>
       <div style={{ maxWidth: "400px" }}>
-        <h1 className="h2 pb-3">Time Clock</h1>
+        <h1 className="h2">Time Clock</h1>
         <Button
           value="in"
           disabled={isPending}

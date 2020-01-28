@@ -7,12 +7,15 @@ import { Hours } from "./utils/hours";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Spinner from "./components/Spinner";
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route, Redirect } from "react-router-dom";
 import TimeClock from "./components/TimeClock";
+import TimeTrackerLogin from "./components/TimeTrackerLogin";
 
 function App() {
   const [isGapiClientLoaded, setIsGapiClientLoaded] = useState(false);
   const [gapiError, setGapiError] = useState(null);
+  const [isLoggedInWithTimeTrackerApi, setIsLoggedInWithTimeTrackerApi] = useState(false);
+
   useEffect(() => {
     gapi
       .loadClientWithAuth()
@@ -41,8 +44,11 @@ function App() {
       <HashRouter>
         <Navbar isGapiClientLoaded={isGapiClientLoaded} />
         <Switch>
+          <Route path="/time-tracker-login">
+            <TimeTrackerLogin onLoginChange={setIsLoggedInWithTimeTrackerApi} />
+          </Route>
           <Route path="/time-clock">
-            <TimeClock />
+            {isLoggedInWithTimeTrackerApi ? <TimeClock /> : <Redirect to="/time-tracker-login" />}
           </Route>
           <Route path="/">
             {isGapiClientLoaded ? (
