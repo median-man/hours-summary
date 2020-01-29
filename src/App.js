@@ -3,6 +3,7 @@ import "./App.css";
 import { AuthProvider } from "./utils/auth";
 import * as gapi from "./utils/google-api";
 import * as sheetsApi from "./utils/sheets-api";
+import * as timeTrackerApi from "./utils/time-tracker-api";
 import { Hours } from "./utils/hours";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
@@ -14,7 +15,7 @@ import TimeTrackerLogin from "./components/TimeTrackerLogin";
 function App() {
   const [isGapiClientLoaded, setIsGapiClientLoaded] = useState(false);
   const [gapiError, setGapiError] = useState(null);
-  const [isLoggedInWithTimeTrackerApi, setIsLoggedInWithTimeTrackerApi] = useState(false);
+  const [isLoggedInWithTimeTrackerApi, setIsLoggedInWithTimeTrackerApi] = useState(timeTrackerApi.isLoggedIn());
 
   useEffect(() => {
     gapi

@@ -1,5 +1,10 @@
 import jwtDecode from "jwt-decode";
 
+const apiUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://time-tracker-api-v1.herokuapp.com"
+    : "http://localhost:3001";
+
 export const token = {
   // vulnerable technique for persisting token if data from users
   // is ever unsantized. A risk I'm taking since this app will likely
@@ -7,14 +12,29 @@ export const token = {
   set: token => localStorage.setItem("time-tracker-api:token", token),
   get: () => localStorage.getItem("time-tracker-api:token"),
   clear: () => localStorage.removeItem("time-tracker-api:token"),
-  decode: () => jwtDecode(token.get())
-}; // faking the api for now
+  decode: () => {
+    try {
+      return jwtDecode(token.get());
+    } catch (error) {
+      return null;
+    }
+  }
+};
 
+export const isLoggedIn = () => {
+  const payload = token.decode();
+  if (!payload) {
+    return false;
+  }
+  return Date.now() / 1000 < payload.exp;
+};
+
+// fake creating a punch
 export const createPunch = punch =>
   new Promise(resolve => setTimeout(resolve, 1000));
 
 export const signup = async credentials => {
-  return fetch("http://localhost:3001/auth/signup", {
+  return fetch(`${apiUrl}/auth/signup`, {
     method: "POST",
     cache: "no-cache",
     headers: {
@@ -22,15 +42,10 @@ export const signup = async credentials => {
     },
     body: JSON.stringify(credentials)
   });
-  // return new Promise(resolve =>
-  //   setTimeout(() => {
-  //     console.log("TODO: implement post new user");
-  //     resolve({});
-  //   }, 1000)
-  // );
 };
+
 export const login = credentials => {
-  return fetch("http://localhost:3001/auth/login", {
+  return fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     cache: "no-cache",
     headers: {
@@ -38,10 +53,4 @@ export const login = credentials => {
     },
     body: JSON.stringify(credentials)
   });
-  // return new Promise(resolve =>
-  //   setTimeout(() => {
-  //     console.log("TODO: implement time tracker login");
-  //     resolve({});
-  //   }, 1000)
-  // );
 };

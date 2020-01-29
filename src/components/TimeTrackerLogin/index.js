@@ -5,7 +5,7 @@ import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
 const TimeTrackerLogin = ({onLoginChange}) => {
-  const [isSignup, setIsSignup] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
 
   const toggleLoginSignup = () => setIsSignup(!isSignup);
 
@@ -16,7 +16,7 @@ const TimeTrackerLogin = ({onLoginChange}) => {
         {isSignup ? <SignupForm onLoginChange={onLoginChange}/> : <LoginForm onLoginChange={onLoginChange} />}
         <div className="text-center">
           <button onClick={toggleLoginSignup} className="btn btn-link">
-            {isSignup ? "Already signed up? Go to login." : "Create account"}
+            {isSignup ? "Already signed up? Go to login." : "Create account for Time Tracker service"}
           </button>
         </div>
       </div>
