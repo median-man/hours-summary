@@ -13,7 +13,7 @@ const TimeTrackerLogin = ({onLoginChange}) => {
     <Container>
       <div style={{ maxWidth: "360px" }}>
         <h1 className="h2">Time Clock</h1>
-        {isSignup ? <SignupForm /> : <LoginForm onLoginChange={onLoginChange} />}
+        {isSignup ? <SignupForm onLoginChange={onLoginChange}/> : <LoginForm onLoginChange={onLoginChange} />}
         <div className="text-center">
           <button onClick={toggleLoginSignup} className="btn btn-link">
             {isSignup ? "Already signed up? Go to login." : "Create account"}

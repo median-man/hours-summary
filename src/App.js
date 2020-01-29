@@ -45,7 +45,7 @@ function App() {
         <Navbar isGapiClientLoaded={isGapiClientLoaded} />
         <Switch>
           <Route path="/time-tracker-login">
-            <TimeTrackerLogin onLoginChange={setIsLoggedInWithTimeTrackerApi} />
+            {isLoggedInWithTimeTrackerApi ? <Redirect to="/time-clock" /> : <TimeTrackerLogin onLoginChange={setIsLoggedInWithTimeTrackerApi} />}
           </Route>
           <Route path="/time-clock">
             {isLoggedInWithTimeTrackerApi ? <TimeClock /> : <Redirect to="/time-tracker-login" />}

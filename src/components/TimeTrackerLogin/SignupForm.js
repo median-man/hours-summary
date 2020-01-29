@@ -1,13 +1,74 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import * as timeTrackerApi from "../../utils/time-tracker-api";
 
-const SignupForm = () => {
+const SubmitButton = ({ isPending, isLogginPending }) => {
+  let text = "Submit";
+  if (isLogginPending) {
+    text = "Logging in...";
+  } else if (isPending) {
+    text = "Creating account...";
+  }
+  return (
+    <button
+      type="submit"
+      className="btn btn-primary btn-block"
+      disabled={isPending}
+    >
+      {isPending && (
+        <span
+          className="spinner-border spinner-border-sm mr-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      )}
+      {text}
+    </button>
+  );
+};
+
+SubmitButton.propTypes = {
+  isPending: PropTypes.bool,
+  isLogginPending: PropTypes.bool
+};
+
+const SignupForm = ({ onLoginChange }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isPending, setIsPending] = useState(false);
+  const [isLogginPending, setIsLoginPending] = useState(false);
 
-  const handleFormSubmit = e => {
+  const signup = async () => {
+    const response = await timeTrackerApi.signup({ email, password });
+    if (response.statusText === "Forbidden") {
+      throw new Error("An account with that email already exists.");
+    }
+  };
+
+  const login = async () => {
+    const response = await timeTrackerApi.login({ email, password });
+    const body = await response.json();
+    timeTrackerApi.token.set(body.token);
+  };
+
+  const handleFormSubmit = async e => {
     e.preventDefault();
-    console.log({ email, password, passwordConfirm });
+    if (isPending) {
+      // prevent multiple requests
+      return;
+    }
+    setIsPending(true);
+    try {
+      await signup();
+      setIsLoginPending(true);
+      await login();
+      onLoginChange(true);
+    } catch (error) {
+      alert(error.message);
+      setIsLoginPending(false);
+      setIsPending(false);
+    }
   };
 
   const handlePasswordConfirmChange = ({ target }) => {
@@ -47,6 +108,7 @@ const SignupForm = () => {
               aria-describedby="passwordDescription"
               onChange={e => setPassword(e.target.value)}
               value={password}
+              disabled={isPending}
             />
           </div>
           <div className="form-group">
@@ -58,6 +120,7 @@ const SignupForm = () => {
               aria-describedby="passwordDescription"
               onChange={handlePasswordConfirmChange}
               value={passwordConfirm}
+              disabled={isPending}
             />
             <small id="passwordDescription" className="form-text text-muted">
               Your password must be at least 8 characters long, contain letters
@@ -66,14 +129,19 @@ const SignupForm = () => {
             </small>
           </div>
           <div className="form-group">
-            <button type="submit" className="btn btn-primary btn-block">
-              Submit
-            </button>
+            <SubmitButton
+              isPending={isPending}
+              isLogginPending={isLogginPending}
+            />
           </div>
         </div>
       </form>
     </>
   );
+};
+
+SignupForm.propTypes = {
+  onLoginChange: PropTypes.func.isRequired
 };
 
 export default SignupForm;
