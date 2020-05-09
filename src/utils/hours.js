@@ -91,18 +91,20 @@ export const create_hours = ({ sheetsApi: sheets_api }) => {
   }
 
   function previous() {
-    week_cursor = subtract_days(week_cursor, 7);
-    if (week_cursor < first_week_at_date) {
+    const prev_week_at = subtract_days(week_cursor, 7) 
+    if (prev_week_at < first_week_at_date) {
       return;
     }
+    week_cursor = prev_week_at;
     return totals();
   }
 
   function next() {
-    week_cursor = add_days(week_cursor, 7);
-    if (Date.now() < week_cursor.getTime()) {
+    const next_week_at = add_days(week_cursor, 7)
+    if (Date.now() < next_week_at.getTime()) {
       return;
     }
+    week_cursor = next_week_at;
     return totals();
   }
 
