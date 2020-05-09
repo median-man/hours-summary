@@ -21,3 +21,13 @@ export const first_day_of_week = (date) => {
   result.setDate(result.getDate() - result.getDay());
   return result;
 };
+
+export const subtract_days = (date, days) => {
+  return add_days(date, -days);
+};
+
+export const add_days = (date, days) => {
+  const result = new Date(date.getTime());
+  result.setDate(result.getDate() + days);
+  return result;
+};
