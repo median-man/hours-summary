@@ -2,7 +2,7 @@ import { create_hours } from "./hours";
 
 const _Date = Date;
 
-const mockDate = dateString => {
+const mockDate = (dateString) => {
   global.Date = class extends _Date {
     constructor(...args) {
       if (args.length) {
@@ -27,7 +27,7 @@ describe("totals", () => {
   let hours;
   const setup = async (fakeHours = []) => {
     const sheetsApi = {
-      fetchHours: async () => fakeHours
+      fetchHours: async () => fakeHours,
     };
     hours = create_hours({ sheetsApi });
     await hours.load();
@@ -48,7 +48,7 @@ describe("totals", () => {
       wednesday: { hours: 0 },
       thursday: { hours: 0 },
       friday: { hours: 0 },
-      saturday: { hours: 0 }
+      saturday: { hours: 0 },
     });
   });
 
@@ -59,15 +59,15 @@ describe("totals", () => {
         timestamp: new Date("December 16, 2019 12:01:00"),
         startDateTime: new Date("December 16, 2019 08:00:00"),
         endDateTime: new Date("December 16, 2019 12:00:00"),
-        notes: "did stuff"
+        notes: "did stuff",
       },
       {
         // wednesday
         timestamp: new Date("December 18, 2019 12:01:00"),
         startDateTime: new Date("December 18, 2019 08:30:00"),
         endDateTime: new Date("December 18, 2019 12:00:00"),
-        notes: "did other stuff"
-      }
+        notes: "did other stuff",
+      },
     ]);
 
     const result = hours.totals();
@@ -81,7 +81,7 @@ describe("totals", () => {
       wednesday: { hours: 3.5 },
       thursday: { hours: 0 },
       friday: { hours: 0 },
-      saturday: { hours: 0 }
+      saturday: { hours: 0 },
     });
   });
 
@@ -92,18 +92,42 @@ describe("totals", () => {
         timestamp: new Date("December 9, 2019 12:01:00"),
         startDateTime: new Date("December 9, 2019 08:00:00"),
         endDateTime: new Date("December 9, 2019 12:00:00"),
-        notes: "did stuff"
+        notes: "did stuff",
       },
       {
         // wednesday - 3.5 hours
         timestamp: new Date("December 11, 2019 12:01:00"),
         startDateTime: new Date("December 11, 2019 08:30:00"),
         endDateTime: new Date("December 11, 2019 12:00:00"),
-        notes: "did other stuff"
-      }
+        notes: "did other stuff",
+      },
     ]);
 
     const { previousWeek } = hours.totals();
     expect(previousWeek.hours).toBe(7.5);
+  });
+
+  test("calculates hours worked for a week in the past", async () => {
+    await setup([
+      {
+        // monday - 4 hours
+        timestamp: new Date("December 2, 2019 12:01:00"),
+        startDateTime: new Date("December 2, 2019 08:00:00"),
+        endDateTime: new Date("December 2, 2019 12:00:00"),
+        notes: "did stuff",
+      },
+      {
+        // wednesday - 3.5 hours
+        timestamp: new Date("December 4, 2019 12:01:00"),
+        startDateTime: new Date("December 4, 2019 08:30:00"),
+        endDateTime: new Date("December 4, 2019 12:00:00"),
+        notes: "did other stuff",
+      },
+    ]);
+
+    hours.set_week(new Date("December 4, 2019 12:05:00"));
+
+    const actual_totals = hours.totals();
+    expect(actual_totals.currentWeek.hours).toBe(7.5)
   });
 });

@@ -5,6 +5,7 @@ import {
 } from "./date_time";
 
 export const create_hours = ({ sheetsApi: sheets_api }) => {
+  let week_cursor = first_day_of_week(new Date());
   let is_hours_data_loaded = false;
   const hours_data = [];
 
@@ -36,7 +37,7 @@ export const create_hours = ({ sheetsApi: sheets_api }) => {
       saturday: { hours: 0 },
     };
 
-    this_week().forEach(({ startDateTime, endDateTime }) => {
+    current_week().forEach(({ startDateTime, endDateTime }) => {
       const hoursWorked = convert_ms_to_hours(endDateTime - startDateTime);
       result[day_of_week(startDateTime)].hours += hoursWorked;
       result.currentWeek.hours += hoursWorked;
@@ -53,12 +54,12 @@ export const create_hours = ({ sheetsApi: sheets_api }) => {
     return result;
   }
 
-  function this_week() {
-    return get_hours_for_week(first_day_of_week(new Date()));
+  function current_week() {
+    return get_hours_for_week(week_cursor);
   }
 
   function previous_week() {
-    const previousWeekBeginDate = first_day_of_week(new Date());
+    const previousWeekBeginDate = new Date(week_cursor.getTime());
     previousWeekBeginDate.setDate(previousWeekBeginDate.getDate() - 7);
     return get_hours_for_week(previousWeekBeginDate);
   }
@@ -72,11 +73,14 @@ export const create_hours = ({ sheetsApi: sheets_api }) => {
     );
   }
 
+  function set_week(date) {
+    week_cursor = first_day_of_week(date);
+  }
+
   return Object.freeze({
     isLoaded: is_loaded,
     load,
-    previousWeek: previous_week,
-    thisWeek: this_week,
+    set_week,
     totals,
   });
 };
