@@ -1,4 +1,4 @@
-import { Hours } from "./hours";
+import { create_hours } from "./hours";
 
 const _Date = Date;
 
@@ -29,7 +29,7 @@ describe("totals", () => {
     const sheetsApi = {
       fetchHours: async () => fakeHours
     };
-    hours = new Hours({ sheetsApi });
+    hours = create_hours({ sheetsApi });
     await hours.load();
     expect(hours.isLoaded()).toEqual(true);
   };

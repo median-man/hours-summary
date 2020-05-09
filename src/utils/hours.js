@@ -1,36 +1,28 @@
-const dayOfWeek = dateIndex => {
-  return [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday"
-  ][dateIndex.getDay()];
-};
+import {
+  day_of_week,
+  convert_ms_to_hours,
+  first_day_of_week,
+} from "./date_time";
 
-export class Hours {
-  constructor({ sheetsApi }) {
-    this._sheetsApi = sheetsApi;
-    this._isHoursDataLoaded = false;
-  }
+export const create_hours = ({ sheetsApi: sheets_api }) => {
+  let is_hours_data_loaded = false;
+  const hours_data = [];
 
-  load() {
-    return this._sheetsApi
+  function load() {
+    return sheets_api
       .fetchHours()
-      .then(data => {
-        this._isHoursDataLoaded = true;
-        this._hoursData = data;
+      .then((data) => {
+        is_hours_data_loaded = true;
+        hours_data.push(...data);
       })
       .catch(console.error);
   }
 
-  isLoaded() {
-    return this._isHoursDataLoaded;
+  function is_loaded() {
+    return is_hours_data_loaded;
   }
 
-  totals() {
+  function totals() {
     const result = {
       currentWeek: { hours: 0 },
       currentDay: { hours: 0 },
@@ -41,54 +33,50 @@ export class Hours {
       wednesday: { hours: 0 },
       thursday: { hours: 0 },
       friday: { hours: 0 },
-      saturday: { hours: 0 }
+      saturday: { hours: 0 },
     };
 
-    const convertMsToHours = ms => ms / (1000 * 60 * 60);
-
-    this.thisWeek().forEach(({ startDateTime, endDateTime }) => {
-      const hoursWorked = convertMsToHours(endDateTime - startDateTime);
-      result[dayOfWeek(startDateTime)].hours += hoursWorked;
+    this_week().forEach(({ startDateTime, endDateTime }) => {
+      const hoursWorked = convert_ms_to_hours(endDateTime - startDateTime);
+      result[day_of_week(startDateTime)].hours += hoursWorked;
       result.currentWeek.hours += hoursWorked;
     });
 
-    result.previousWeek.hours = this.previousWeek().reduce(
+    result.previousWeek.hours = previous_week().reduce(
       (hours, { startDateTime, endDateTime }) => {
-        return hours + convertMsToHours(endDateTime - startDateTime);
+        return hours + convert_ms_to_hours(endDateTime - startDateTime);
       },
       0
     );
 
-    result.currentDay.hours = result[dayOfWeek(new Date())].hours;
+    result.currentDay.hours = result[day_of_week(new Date())].hours;
     return result;
   }
 
-  thisWeek() {
-    return this._getHoursForWeek(this._firstDayOfCurrentWeek());
+  function this_week() {
+    return get_hours_for_week(first_day_of_week(new Date()));
   }
 
-  previousWeek() {
-    const previousWeekBeginDate = this._firstDayOfCurrentWeek();
+  function previous_week() {
+    const previousWeekBeginDate = first_day_of_week(new Date());
     previousWeekBeginDate.setDate(previousWeekBeginDate.getDate() - 7);
-    return this._getHoursForWeek(previousWeekBeginDate);
+    return get_hours_for_week(previousWeekBeginDate);
   }
 
-  _firstDayOfCurrentWeek() {
-    const result = new Date();
-    result.setMilliseconds(0);
-    result.setSeconds(0);
-    result.setMinutes(0);
-    result.setHours(0);
-    result.setDate(result.getDate() - result.getDay());
-    return result;
-  }
-
-  _getHoursForWeek(beginDate) {
+  function get_hours_for_week(beginDate) {
     const endDate = new Date(beginDate.getTime());
     endDate.setDate(beginDate.getDate() + 7);
-    return this._hoursData.filter(
+    return hours_data.filter(
       ({ startDateTime }) =>
         startDateTime >= beginDate && startDateTime < endDate
     );
   }
-}
+
+  return Object.freeze({
+    isLoaded: is_loaded,
+    load,
+    previousWeek: previous_week,
+    thisWeek: this_week,
+    totals,
+  });
+};
